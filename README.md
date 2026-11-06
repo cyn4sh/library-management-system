@@ -2,6 +2,17 @@
 
 A full-stack library management system. This repository currently contains the backend data layer: a NestJS API with a PostgreSQL database managed through Prisma.
 
+## Assignment Files (Week 1: Design & Migrate Your Library Schema)
+
+| Requirement | File |
+| --- | --- |
+| `Role` enum (`PATRON`, `LIBRARIAN`), `User` model using it, `Genre` model, `Book` model with `genreId` foreign key and `@relation` | [api/prisma/schema.prisma](https://github.com/cyn4sh/library-management-system/blob/main/api/prisma/schema.prisma) |
+| Seed script: 4 genres and 16 books | [api/prisma/seed.ts](https://github.com/cyn4sh/library-management-system/blob/main/api/prisma/seed.ts) |
+| `PrismaService` extends `PrismaClient`, implements `OnModuleInit`, calls `this.$connect()` | [api/src/prisma/prisma.service.ts](https://github.com/cyn4sh/library-management-system/blob/main/api/src/prisma/prisma.service.ts) |
+| `DATABASE_URL` placeholder, no real credentials | [api/.env.example](https://github.com/cyn4sh/library-management-system/blob/main/api/.env.example) |
+| Schema decisions: why `Book` references `Genre` | [Schema Decisions](#schema-decisions) below |
+| Migration applied to hosted PostgreSQL | [api/prisma/migrations/20261104143143_init/migration.sql](https://github.com/cyn4sh/library-management-system/blob/main/api/prisma/migrations/20261104143143_init/migration.sql) |
+
 ## Tech Stack
 
 - NestJS and TypeScript (backend)
