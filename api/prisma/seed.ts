@@ -40,8 +40,10 @@ async function main() {
   // Clear books first so running the seed twice doesn't create duplicates
   await prisma.book.deleteMany();
 
+  // Sample ISBNs: 978 followed by a zero-padded counter, unique per book
+  let isbnCounter = 1;
+
   for (const [genreName, books] of Object.entries(catalog)) {
-    // Create the genre if it doesn't exist yet, otherwise reuse it
     const genre = await prisma.genre.upsert({
       where: { name: genreName },
       update: {},
@@ -49,7 +51,12 @@ async function main() {
     });
 
     await prisma.book.createMany({
-      data: books.map((book) => ({ ...book, genreId: genre.id })),
+      data: books.map((book) => ({
+        ...book,
+        isbn: `978${String(isbnCounter++).padStart(10, '0')}`,
+        totalCopies: 3,
+        genreId: genre.id,
+      })),
     });
   }
 
