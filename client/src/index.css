@@ -1,0 +1,61 @@
+@import "tailwindcss";
+
+@theme {
+  /* Paper & ink palette */
+  --color-paper: #f6f1e7;
+  --color-paper-deep: #ece4d3;
+  --color-card: #fffdf8;
+  --color-ink: #1f1d1a;
+  --color-ink-soft: #5c564c;
+  --color-line: #ddd3bf;
+
+  /* One accent: deep forest green */
+  --color-forest: #2f5d4a;
+  --color-forest-deep: #234637;
+  --color-forest-tint: #e3ede6;
+
+  /* Muted brick for errors */
+  --color-brick: #9b3d2e;
+
+  /* Type: serif for headings, sans-serif for body */
+  --font-display: "Fraunces", Georgia, serif;
+  --font-sans: "Inter", system-ui, sans-serif;
+
+  /* Soft, low shadows */
+  --shadow-card: 0 1px 2px rgb(31 29 26 / 0.06),
+    0 10px 24px -14px rgb(31 29 26 / 0.22);
+  --shadow-lift: 0 2px 4px rgb(31 29 26 / 0.08),
+    0 18px 32px -16px rgb(31 29 26 / 0.3);
+
+  /* Quiet shimmer for skeleton loading */
+  --animate-shimmer: shimmer 1.6s ease-in-out infinite;
+  @keyframes shimmer {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.55; }
+  }
+}
+
+@layer base {
+  html {
+    background-color: var(--color-paper);
+  }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1, h2, h3 {
+    font-family: var(--font-display);
+    letter-spacing: -0.01em;
+  }
+
+  ::selection {
+    background-color: var(--color-forest);
+    color: var(--color-paper);
+  }
+}
