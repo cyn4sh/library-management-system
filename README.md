@@ -1,6 +1,6 @@
 # Library Management System
 
-A full-stack library management system. This repository currently contains the backend: a NestJS API with a PostgreSQL database managed through Prisma, covering catalog CRUD (genres and books) and JWT authentication with role-based access.
+A full-stack library management system. This repository contains a NestJS API with a PostgreSQL database managed through Prisma (catalog CRUD and JWT authentication with roles), and a React client for browsing and searching the catalog.
 
 ## Assignment Files (Week 1: Design & Migrate Your Library Schema)
 
@@ -28,6 +28,19 @@ A full-stack library management system. This repository currently contains the b
 | Postman collection with a request for every endpoint | [docs/postman_collection.json](https://github.com/cyn4sh/library-management-system/blob/main/docs/postman_collection.json) |
 | Migration adding `password`, `isbn` and `totalCopies` | [api/prisma/migrations/20261113073206_add_auth_and_book_fields/migration.sql](https://github.com/cyn4sh/library-management-system/blob/main/api/prisma/migrations/20261113073206_add_auth_and_book_fields/migration.sql) |
 
+## Assignment Files (Week 3: Build the Library Catalog & Search)
+
+| Requirement | File |
+| --- | --- |
+| `<App />` wrapped in `<BrowserRouter>` | [client/src/main.jsx](https://github.com/cyn4sh/library-management-system/blob/main/client/src/main.jsx) |
+| Routes for `/` and `/books/:id` | [client/src/App.jsx](https://github.com/cyn4sh/library-management-system/blob/main/client/src/App.jsx) |
+| Home page rendering `BookGrid`, `SearchBar` and a genre filter, holding the shared filter state | [client/src/pages/HomePage.jsx](https://github.com/cyn4sh/library-management-system/blob/main/client/src/pages/HomePage.jsx) |
+| `BookGrid` fetches `GET /books` with `genreId` and `search`, with loading, error and empty states | [client/src/components/BookGrid.jsx](https://github.com/cyn4sh/library-management-system/blob/main/client/src/components/BookGrid.jsx) |
+| `BookCard` renders one book, used with `key` set to the book's id | [client/src/components/BookCard.jsx](https://github.com/cyn4sh/library-management-system/blob/main/client/src/components/BookCard.jsx) |
+| `SearchBar` debounces input with `setTimeout` and cleanup before calling `onSearch` | [client/src/components/SearchBar.jsx](https://github.com/cyn4sh/library-management-system/blob/main/client/src/components/SearchBar.jsx) |
+| `BookDetail` reads the id with `useParams()` and fetches `GET /books/:id` | [client/src/pages/BookDetail.jsx](https://github.com/cyn4sh/library-management-system/blob/main/client/src/pages/BookDetail.jsx) |
+| `VITE_API_URL` pointing at the NestJS backend | [client/.env](https://github.com/cyn4sh/library-management-system/blob/main/client/.env) |
+
 ## Tech Stack
 
 - NestJS and TypeScript (backend)
@@ -36,6 +49,8 @@ A full-stack library management system. This repository currently contains the b
 - `class-validator` and `class-transformer` (request validation)
 - `@nestjs/jwt`, `@nestjs/passport` and `passport-jwt` (authentication)
 - `bcrypt` (password hashing)
+- React 19 with Vite and JavaScript (`.jsx`) for the client
+- React Router (routing) and Tailwind CSS v4 (styling)
 
 ## Project Structure
 
@@ -53,12 +68,22 @@ library-management-system/
 │   │   ├── auth/             # Register, login, JWT strategy, guards
 │   │   └── main.ts           # ValidationPipe and CORS
 │   └── .env.example          # Environment variable template
+├── client/
+│   ├── src/
+│   │   ├── pages/            # HomePage and BookDetail
+│   │   ├── components/       # BookGrid, BookCard and SearchBar
+│   │   ├── App.jsx           # Routes
+│   │   ├── main.jsx          # BrowserRouter
+│   │   └── index.css         # Tailwind theme
+│   └── .env                  # VITE_API_URL
 ├── docs/
 │   └── postman_collection.json
 └── README.md
 ```
 
 ## Getting Started
+
+### API
 
 1. Install dependencies:
 
@@ -101,6 +126,32 @@ library-management-system/
    ```
 
    The API listens on `http://localhost:3000`.
+
+### Client
+
+1. In a second terminal, install dependencies:
+
+   ```bash
+   cd client
+   npm install
+   ```
+
+2. Check that `client/.env` points at your API (the default is `VITE_API_URL=http://localhost:3000`).
+
+3. Start the client:
+
+   ```bash
+   npm run dev
+   ```
+
+   The client runs on `http://localhost:5173`. The API must be running for the catalog to load.
+
+## Client Features
+
+- Responsive catalog grid of book cards, with typographic covers coloured by genre
+- Book detail page at `/books/:id` showing title, author, genre, year, ISBN and copies
+- Genre filter and a live search bar (title or author), debounced by 400 ms
+- Skeleton loading, a clear error message and an empty state for searches with no results
 
 ## API Endpoints
 
@@ -184,7 +235,8 @@ Passwords are hashed with bcrypt before saving, so the database never holds a us
 
 ## Environment Variables
 
-| Variable | Description |
-| --- | --- |
-| `DATABASE_URL` | PostgreSQL connection string. See `api/.env.example` for the format. Never commit the real value. |
-| `JWT_SECRET` | Secret used to sign and verify JWTs. Generate it with `openssl rand -hex 32`. Never commit the real value. |
+| Variable | Where | Description |
+| --- | --- | --- |
+| `DATABASE_URL` | `api/.env` | PostgreSQL connection string. See `api/.env.example` for the format. Never commit the real value. |
+| `JWT_SECRET` | `api/.env` | Secret used to sign and verify JWTs. Generate it with `openssl rand -hex 32`. Never commit the real value. |
+| `VITE_API_URL` | `client/.env` | Address of the API, `http://localhost:3000` by default. This file is committed on purpose: Vite sends `VITE_` values to the browser, so never put a secret in it. |
